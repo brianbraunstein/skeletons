@@ -1,6 +1,23 @@
 
 # golang skeleton multi-module workspace
 
+## Caveat
+
+Due to bug https://github.com/golang/go/issues/50750 the utility of workspaces
+seems limited or fundamentally broken.  Until that's resolved, the code
+structure documented here will not work as intended.  You're forced into either
+one of the following problems:
+1) A combined module for all code which forces a giant list of dependencies in
+   the go.mod file, forcing clients to pull down unnecessary dependencies.
+2) For a module A which depends on module B both within the same workspace W, if
+   there are changes to B which A needs, and A also needs to `go mod tidy`, then:
+  - Publish the changes to B in a separate commit.
+  - Then run `git mod tidy` in B.
+
+One will note that (1) doesn't use workspaces at all, and (2) is the same
+procedure that would be needed as if A and B were not together within W.  This
+means workspaces are mostly or entirely useless.
+
 ## Motivation
 
 While more complex than
